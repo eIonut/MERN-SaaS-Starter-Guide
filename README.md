@@ -1,4 +1,4 @@
-# The MERN stack SaaS GUIDE
+# The MERN Stack SaaS Guide
 This repository acts as a guide that you can follow to build your first real big application using the MERN stacks. However this guide might be useful for other tech stacks as well.
 
 A complete guide to building a real SaaS application using the MERN stack.
@@ -63,12 +63,12 @@ ___
 * AWS or Hetzner
 * Github Actions, Jenkins or GitLab CI/CD (CI/CD)
 
-### AI Development Workflow
+## AI Development Workflow
 
 AI tools dramatically improve development speed when used correctly. This guide uses the following workflow.
 
-#### AI Tools
-##### Design
+### AI Tools
+### 1. Design
 Use: v0.dev or lovable.dev
 
 These tools generate React/NextJS UI code from prompts.
@@ -91,7 +91,7 @@ Prompt example:
 
 Export/copy the generated React/NextJS code.
 
-##### Coding
+### 2. Coding
 Use: Claude Code, Gemini, Cursor.
 
 These tools are ideal for:
@@ -102,7 +102,7 @@ These tools are ideal for:
 - creating new features
 - basically everything code related
 
-#### Typical AI Workflow
+### 3. Typical AI Workflow
 
 1️⃣ Design UI with v0.dev / lovable
 
