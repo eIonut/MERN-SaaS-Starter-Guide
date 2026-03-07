@@ -62,3 +62,56 @@ ___
 * Nginx
 * AWS or Hetzner
 * Github Actions, Jenkins or GitLab CI/CD (CI/CD)
+
+### AI Development Workflow
+
+AI tools dramatically improve development speed when used correctly. This guide uses the following workflow.
+
+#### AI Tools
+##### Design
+Use: v0.dev or lovable.dev
+
+These tools generate React/NextJS UI code from prompts.
+
+Prompt example:
+
+
+    
+    I want you to create a mock application that will act as a design for me. The name of the app must be X. It should contain the following functionalities:
+    
+    - Internal company links grouped on projects(like jira link, gitlab repo, etc)
+    
+    - Customer support tickets are now sent to Slack but i want them to be on the app instead and can be filtered by priority (p1, p2, p3)
+    
+    - Other features that should replace some functionalities of Slack
+    
+    - The design should be very simple and dark mode only
+    
+    - The login should be done with company email(you should mock that) and the users will receive a OTP on email
+
+Export/copy the generated React/NextJS code.
+
+##### Coding
+Use: Claude Code, Gemini, Cursor.
+
+These tools are ideal for:
+- refactoring UI
+- generating backend endpoints
+- writing tests
+- codebase-wide edits
+- creating new features
+- basically everything code related
+
+#### Typical AI Workflow
+
+1️⃣ Design UI with v0.dev / lovable
+
+2️⃣ Create a new GitHub/GitLab repository and import/copy UI code into the project
+
+3️⃣ Refactor components and code using Claude Code / Gemini / Cursor
+
+4️⃣ Generate backend code / endpoints
+
+5️⃣ Have both services up and running and connected to each other
+
+6️⃣ Write tests in Vitest using AI for both UI and API services
