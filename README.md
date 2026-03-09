@@ -115,3 +115,66 @@ These tools are ideal for:
 5️⃣ Have both services up and running and connected to each other
 
 6️⃣ Write tests in Vitest using AI for both UI and API services
+
+## Project Structure
+
+This project uses a monorepo structure and it represents the bare minimum EXAMPLE of your project(may not contain all the files).
+   
+    your-project
+    │
+    ├── /frontend
+        ├── /src
+             ├── /__tests__
+             ├── /components
+             ├── /contexts
+             ├── /graphql (if applicable)
+             ├── /hooks
+             ├── /routes
+             ├── /types
+             ├── /utils
+             App.tsx
+             index.tsx
+    │   .env.development
+    │   .env.test
+    │   .gitignore
+    │   tsconfig.json
+    │   package.json
+    │   vite.config.ts
+    │   vitest.config.js
+    │
+    ├── /backend
+        ├── /src
+             ├── /controllers
+             └── /crons
+             └── /middlewares
+             └── /migrations
+             └── /routes
+             └── /scripts (bash scripts if applicable)
+             └── /services
+             └── /utils
+             └── /models (if not using GraphQL)
+             └── app.ts
+             └── database.ts
+             └── index.ts
+             └── migrations.ts
+    │   .env
+    │   .gitignore
+    │   package.json
+    │   tsconfig.json
+    │   vitest.config.js
+    │
+    ├── /infra
+        ├── /backend
+              ├── Dockerfile
+        ├── /docs
+              ├── deployment-guide.md
+              ├── aws-configuration-guide.md
+        ├── /frontend
+              ├── Dockerfile
+        ├── /monitoring
+              ├── prometheus.yaml
+    │   └── /nginx
+              ├── nginx.conf
+    ├── package.json 
+    ├── .gitignore
+    └── README.md
