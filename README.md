@@ -132,6 +132,7 @@ This project uses a monorepo structure and it represents the bare minimum EXAMPL
              ├── /routes
              ├── /types
              ├── /utils
+             ├── /lib
              App.tsx
              index.tsx
     │   .env.development
@@ -173,8 +174,199 @@ This project uses a monorepo structure and it represents the bare minimum EXAMPL
               ├── Dockerfile
         ├── /monitoring
               ├── prometheus.yaml
-    │   └── /nginx
+        └── /nginx
               ├── nginx.conf
+        └── deploy.sh
+        └── provision.sh
+        └── docker-compose.yml
+        .env.dev.example
+        .dockerignore
+        .gitignore
     ├── package.json 
     ├── .gitignore
     └── README.md
+
+## REST API Example
+
+### Routes:
+
+routes/projectRoutes.ts
+
+- GET /projects
+- POST /projects
+- UPDATE /projects/:id
+- DELETE /projects/:id
+
+Controller naming example:
+
+controllers/projects.ts
+
+Responsibilities:
+
+- parse request
+- call services
+- return response
+
+## GraphQL Example
+
+If using GraphQL, define schema.
+
+  ```graphql/schema/projectSchema.js```
+
+Example:
+
+```
+type Project {
+  id: ID
+  name: String
+}
+```
+
+Resolver:
+
+```graphql/resolvers/projectResolver.js```
+
+GraphQL allows clients to request only required data.
+
+## Frontend Architecture
+
+Frontend uses Next.js / React.
+
+Instead of using global state libraries (Redux, Zustand), this architecture uses:
+
+- React Query for server state
+
+- React state for UI state
+
+HTTP requests are handled using Axios.
+
+## Axios Setup
+
+```lib/axios.ts
+
+import axios from "axios"
+
+export const api = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_API_URL,
+  withCredentials: true,
+})
+```
+
+## React Query Setup
+
+```lib/react-query.ts
+
+import { QueryClient } from "@tanstack/react-query"
+
+export const queryClient = new QueryClient()
+```
+
+## React Query Hooks
+
+```hooks/useProjects.ts
+
+import { useQuery } from "@tanstack/react-query"
+import { getProjects } from "../services/projectApi"
+
+export function useProjects() {
+  return useQuery({
+    queryKey: ["projects"],
+    queryFn: getProjects
+  })
+}
+```
+
+## Frontend Testing (Vitest)
+
+Testing uses:
+
+- Vitest
+
+- React Testing Library
+
+- jsdom
+
+## Install Testing Libraries
+
+```
+npm install -D vitest \
+@testing-library/react \
+@testing-library/jest-dom \
+jsdom
+```
+
+## Vitest Configuration
+
+```vitest.config.ts
+import { defineConfig } from "vitest/config"
+
+export default defineConfig({
+  test: {
+    environment: "jsdom",
+    globals: true
+  }
+})
+```
+
+## Example Test
+
+```tests/button.test.tsx
+import { render, screen } from "@testing-library/react"
+import Button from "@/components/ui/button"
+
+test("renders button", () => {
+  render(<Button>Click</Button>)
+
+  expect(screen.getByText("Click")).toBeInTheDocument()
+})
+```
+
+## Infrastructure
+
+Infrastructure is fully containerized.
+
+Services run inside Docker containers and are orchestrated with Docker Swarm.
+
+### Server Provision Script (infra/provision.sh)
+
+Used when creating a new server.
+
+```infra/provision.sh
+#!/usr/bin/env bash
+
+# System Update 1/7
+# Docker engine Install 2/7
+# UFW firewall - optional 3/7
+# Docker Swarm Init 4/7
+# TLS  Certificate - yourdomain.com 5/7
+# Automatic certificate renewal - optional 6/7
+# Create aplication directory and input docker swarm secrets 7/7
+```
+
+### Deploy Application (infra/deploy.sh)
+
+```infra/deploy.sh
+#!/usr/bin/env bash
+
+# Login into dockerhub (you must provide access)
+# Pull docker hub docker images
+# Deploy docker swarm stack using the docker-compose.yml file
+```
+
+Optional: Add CI/CD - when pushing to the repo, deploy happens automatically.
+
+### Manual Deployment Flow
+
+Typical deployment process:
+
+1️⃣ push code to GitHub
+2️⃣ connect to server
+3️⃣ run deploy.sh script
+
+## Recommended Next Steps
+
+After building the base architecture, add:
+
+- authentication system
+- payments (Stripe)
+- object storage (S3) - for backups
