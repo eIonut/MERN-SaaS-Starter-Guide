@@ -370,3 +370,152 @@ After building the base architecture, add:
 - authentication system
 - payments (Stripe)
 - object storage (S3) - for backups
+
+## Deploying the Application on Hetzner
+
+### 1. Create a Hetzner Account
+
+- Go to https://hetzner.com
+- Create an account
+- Add a payment method
+- Open Hetzner Cloud Console
+
+### 2. Create an SSH Key
+
+Before creating a server, generate an SSH key locally.
+
+```ssh-keygen -t ed25519 -C "your_email@example.com"```
+
+This creates:
+
+```
+~/.ssh/id_ed25519
+~/.ssh/id_ed25519.pub
+```
+
+Copy the public key:
+
+```cat ~/.ssh/id_ed25519.pub```
+
+### 3. Add SSH Key to Hetzner
+
+In the Hetzner Cloud console:
+
+- Go to Security → SSH Keys
+
+- Click Add SSH Key
+
+- Paste the key
+
+This allows passwordless server access.
+
+### 4. Create a Server
+
+In Hetzner Cloud:
+
+Click Create Server
+
+Recommended configuration:
+
+#### Location
+
+```FSN1 (Germany)```
+or
+```HEL1 (Finland)```
+
+#### Image
+
+Choose:
+
+```Ubuntu 24.04```
+
+#### Server Type
+
+Good starting option:
+
+```CPX21```
+
+Example specs:
+
+```
+2 vCPU
+4GB RAM
+80GB SSD
+```
+
+#### SSH Keys
+
+Select the SSH key you created earlier.
+
+#### Server Name
+
+Example:
+
+```saas-prod-1```
+
+Then click Create & Buy.
+
+### 5. Configure the Hetzner Cloud Firewall
+
+The Hetzner Firewall is a network-level firewall in front of the server (independent from UFW that runs on the OS). Use both for defence in depth.
+
+1. Go to **Project → Firewalls → Create Firewall**.
+2. Name: `yourproject-fw`.
+
+### Inbound rules
+
+| Protocol | Port | Source              | Purpose                      |
+|----------|------|---------------------|------------------------------|
+| TCP      | 22   | `0.0.0.0/0`, `::/0` | SSH                          |
+| TCP      | 80   | `0.0.0.0/0`, `::/0` | HTTP (redirect + Let's Encrypt) |
+| TCP      | 443  | `0.0.0.0/0`, `::/0` | HTTPS                        |
+
+> **Block everything else.** In particular, never open port 27017 (MongoDB) or 2376/2377 (Docker). MongoDB must only be reachable inside the Docker overlay network.
+
+### Outbound rules
+Leave the default (allow all outbound). The server needs to reach DockerHub, Let's Encrypt, Google OAuth APIs, and Resend.
+
+### Apply to server
+1. Click **Apply to Servers** → select `yourapp-prod-1` → **Apply**.
+
+### 6. Connect to the server
+
+```bash
+ssh -i ~/.ssh/your_ssh_key_name root@<server-ip>
+```
+
+For convenience, add a shortcut to `~/.ssh/config`:
+
+```
+Host yourshortcutname
+  HostName <server-ip>
+  User root
+  IdentityFile ~/.ssh/your_ssh_key_name
+```
+
+Then connect with:
+
+```bash
+ssh yourshortcutname
+```
+
+---
+
+### 7. What to do next
+
+1. **Clone the repo** on the server:
+   ```bash
+   git clone <repo-url> /opt/yourapp
+   cd /opt/yourapp
+   ```
+2. **Run the provision script** (DNS must already be pointing to this server):
+   ```bash
+   bash infra/provision.sh admin@yourdomain
+   ```
+3. **Follow `infra/docs/deployment-guide.md`** to build images and run deploy.sh to deploy the stack.
+
+---
+
+## 8. Optional: Add a volume for MongoDB
+
+By default MongoDB data lives in the `mongo-data` Docker named volume on the server's root disk. For better durability and independent backup, attach a Hetzner Volume instead.
