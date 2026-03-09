@@ -1,5 +1,5 @@
-# The MERN Stack SaaS Guide
-This repository acts as a guide that you can follow to build your first real big application using the MERN stacks. However this guide might be useful for other tech stacks as well.
+# The MERN(Mongo, Express, React, NodeJs) Stack SaaS Guide
+This repository acts as a guide that you can follow and use as an architecture guidance to build your first real big application using the MERN stacks. However this guide might be useful for other tech stacks as well.
 
 A complete guide to building a real SaaS application using the MERN stack.
 This repository demonstrates how to build a production-ready SaaS architecture, including:
@@ -10,7 +10,7 @@ This repository demonstrates how to build a production-ready SaaS architecture, 
 - Docker Swarm deployment
 - AWS / Hetzner hosting
 
-Although this guide uses MERN, the principles apply to any modern web stack.
+Although this guide uses the MERN stack, the principles apply to any modern web stack.
 
 This guide uses:
 - Next.js / React
@@ -19,9 +19,10 @@ This guide uses:
 - MongoDB
 - Docker + Docker Swarm
 - AWS / Hetzner
+  
 No frontend state management libraries are used - but you can add your preffered one such as Zustand or Redux.
 
-## Tech Stack
+## Tech Stack and preffered libraries
 ### Frontend
 * Next.js
 * React
@@ -40,7 +41,7 @@ ___
 
 ### Backend
 
-#### Core stack:
+#### Core stack and preffered libraries:
 
 * Node.js
 * TypeScript
@@ -247,7 +248,7 @@ HTTP requests are handled using Axios.
 import axios from "axios"
 
 export const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL,
+  baseURL: process.env.NEXT_PUBLIC_API_URL, // or import.meta.env.API_URL if you are using plain React
   withCredentials: true,
 })
 ```
